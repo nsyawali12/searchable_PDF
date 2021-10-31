@@ -26,7 +26,17 @@ def  image_conversion(inpath, image_path):
     for image in pil_images:
         images.save(image_path+'image_converted.jpg')
 
-inpath = "D:/My-Blog/Blog-1/inpath/ab.pdf"
+inpath = "C:/Users/Wallsk/Documents/working-stuff/Projects/searchable_PDF/inpath"
 image_path = "D:/My-Blog/Blog-1/image_path/"
 image_conversion(inpath, image_path)
 
+""" Convert to PDF """
+
+import cv2
+import pytesseract
+
+pytesseract.pytesseract.tesseract_cmd = 'C://Program Files//Tesseract-OCR//tesseract.exe'
+TESSDATA_PREFIX = 'C://Program Files//Tesseract-OCR'
+tessdata_dir_config = '--tessdata-dir "C://Program Files//Tesseract-OCR//tessdata"'
+
+input_dir = "D:/My-Blog/Blog-1/image_path/image_converted.jpg"
