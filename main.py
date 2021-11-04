@@ -101,18 +101,24 @@ for i in range(1,4):
 
 # im.save(pdf1_filename, "PDF" ,resolution=100.0, save_all=True, append_images=result_img)
 
+list_pdf = []
 
 f = open("C:/Users/Wallsk/Documents/working-stuff/Projects/searchable_PDF/output_path/homeland_searchablePDF_1.pdf", "w+b")
 f.write(results[0])
 f.close()
 
+list_pdf.append(f)
+
 g = open("C:/Users/Wallsk/Documents/working-stuff/Projects/searchable_PDF/output_path/homeland_searchablePDF_2.pdf", "w+b")
 g.write(results[1])
 g.close()
 
+list_pdf.append(g)
+
 h = open("C:/Users/Wallsk/Documents/working-stuff/Projects/searchable_PDF/output_path/homeland_searchablePDF_3.pdf", "w+b")
 h.write(results[2])
 h.close()
+
 
 
 # output_path = 'C:/Users/Wallsk/Documents/working-stuff/Projects/searchable_PDF/output_path/'
