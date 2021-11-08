@@ -53,7 +53,7 @@ image_conversion(inpath, image_path)
 import cv2
 import pytesseract
 
-## tergantung installasi nya di simpen dimana
+## directory cmd tergantung installing tesseract nya dimana
 
 pytesseract.pytesseract.tesseract_cmd = 'C://Program Files//Tesseract-OCR//tesseract.exe'
 TESSDATA_PREFIX = 'C://Program Files//Tesseract-OCR'
@@ -69,13 +69,10 @@ def open_image(path):
     except:
         return []
 
-
-
 # print(len(try_img))
 
 results = []
-
-# range gambarnya ada 3 gambar, untuk percobaan sementara   
+  
 for img_name in try_img:
     img = open_image(img_name)
     # try_img.append(img)
@@ -85,9 +82,7 @@ for img_name in try_img:
     result = bytearray(res)
     results.append(result)
 
-print(len(results))
-
-
+# print(len(results))
 
 pdf_counter = 1
 
