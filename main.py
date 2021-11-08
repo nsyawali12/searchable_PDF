@@ -7,12 +7,13 @@ import PIL
 from PIL import Image
 from fpdf import FPDF
 import matplotlib.pyplot as plt
-
-from PyPDF2 import PdfFileMerger
+import glob
 
 import os
 from os import listdir
 from os.path import isfile, join
+
+from merger_pdf import merging_pdf_to_file
 
 
 def image_conversion(inpath, image_path):
@@ -40,14 +41,11 @@ def image_conversion(inpath, image_path):
         image.save(image_path + filename)
 
         image_counter = image_counter + 1
-        
-# inpat sample pdf
-# inpath = "C:/Users/Wallsk/Documents/working-stuff/Projects/searchable_PDF/inpath/sample.pdf"
 
 # inpath coba data tanah
 
-inpath = "C:/Users/Wallsk/Documents/working-stuff/Projects/searchable_PDF/inpath/data1.PDF"
-image_path = "C:/Users/Wallsk/Documents/working-stuff/Projects/searchable_PDF/image_path/"
+inpath = "inpath/data1.PDF"
+image_path = "image_path/"
 image_conversion(inpath, image_path)
 
 """ Convert to PDF """
@@ -55,11 +53,14 @@ image_conversion(inpath, image_path)
 import cv2
 import pytesseract
 
+## tergantung installasi nya di simpen dimana
+
 pytesseract.pytesseract.tesseract_cmd = 'C://Program Files//Tesseract-OCR//tesseract.exe'
 TESSDATA_PREFIX = 'C://Program Files//Tesseract-OCR'
 tessdata_dir_config = '--tessdata-dir "C://Program Files//Tesseract-OCR//tessdata"'
 
 input_dir = image_path + "img_homeland_%d.jpg"
+try_img = list(glob.glob(image_path + "*.jpg"))
 
 def open_image(path):
     try:
@@ -68,68 +69,34 @@ def open_image(path):
     except:
         return []
 
-try_img = []
+
+
+# print(len(try_img))
+
 results = []
 
 # range gambarnya ada 3 gambar, untuk percobaan sementara   
-for i in range(1,4):
-    img = open_image(input_dir % i)
+for img_name in try_img:
+    img = open_image(img_name)
     # try_img.append(img)
 
     res = pytesseract.image_to_pdf_or_hocr(img, lang="eng",
                                             config=tessdata_dir_config)
     result = bytearray(res)
     results.append(result)
-# plt.imshow(try_img[0])
-# plt.show()
 
-# print(len(results))
-# print(results[1])
-# print(bytearray(results[1]))
-
-# plt.imshow(results[0])
-# plt.show()
-    
-
-# for res in try_img:
-#     result = pytesseract.image_to_pdf_or_hocr(try_img[res], lang="eng",
-#                                             config=tessdata_dir_config)
-    
-#     results.append(result)
-
-# pdf1_filename = open("C:/Users/Wallsk/Documents/working-stuff/Projects/searchable_PDF/output_path/homeland_searchablePDF.pdf", "w+b")
-
-# im.save(pdf1_filename, "PDF" ,resolution=100.0, save_all=True, append_images=result_img)
-
-list_pdf = []
-
-f = open("C:/Users/Wallsk/Documents/working-stuff/Projects/searchable_PDF/output_path/homeland_searchablePDF_1.pdf", "w+b")
-f.write(results[0])
-f.close()
-
-list_pdf.append(f)
-
-g = open("C:/Users/Wallsk/Documents/working-stuff/Projects/searchable_PDF/output_path/homeland_searchablePDF_2.pdf", "w+b")
-g.write(results[1])
-g.close()
-
-list_pdf.append(g)
-
-h = open("C:/Users/Wallsk/Documents/working-stuff/Projects/searchable_PDF/output_path/homeland_searchablePDF_3.pdf", "w+b")
-h.write(results[2])
-h.close()
+print(len(results))
 
 
 
-# output_path = 'C:/Users/Wallsk/Documents/working-stuff/Projects/searchable_PDF/output_path/'
+pdf_counter = 1
 
-# for each_file in listdir(output_path):
-#     if isfile(join(output_path, each_file)):
-#         pdf_path = os.path.join(output_path,each_file)
-#         merger_path = os.path.join(output_path,each_file.rsplit('.', 1)[0]+'.pdf')
-#         pdf_img = Image(pdf_path)
-#         pdf_img.write(merger_path)
+for save_pdf in range(0, len(results)):
+    pdf_filename = open("output_path/homeland_searchablePDF_" + str(pdf_counter) + ".pdf", "w+b")
+    pdf_filename.write(results[save_pdf])
+    pdf_filename.close()
 
-# with open("C:/Users/Wallsk/Documents/working-stuff/Projects/searchable_PDF/output_path/homeland_searchablePDF.pdf", "w+b") as f:
-#     for n in range(0, 3):
-#         f.write(results[n])
+    pdf_counter = pdf_counter + 1
+
+path_to_pdf = "output_path/"
+merging_pdf_to_file(path_to_pdf)
