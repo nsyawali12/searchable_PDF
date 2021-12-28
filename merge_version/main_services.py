@@ -15,4 +15,4 @@ def allowed_file(filename):
     return '.' in filename and \
            filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
     
-# Define main merger      
+# Define main merger       

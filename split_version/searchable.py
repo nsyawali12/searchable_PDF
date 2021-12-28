@@ -97,5 +97,5 @@ for save_pdf in range(0, len(results)):
 
     pdf_counter = pdf_counter + 1
 
-path_to_pdf = "output_path/"
-merging_pdf_to_file(path_to_pdf)
+# path_to_pdf = "output_path/"
+# merging_pdf_to_file(path_to_pdf)
