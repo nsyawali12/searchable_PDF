@@ -15,6 +15,15 @@ from os.path import isfile, join
 
 from merger_pdf import merging_pdf_to_file
 
+import cv2
+import pytesseract
+
+def open_image(path):
+    try:
+        image = cv2.imread(path)
+        return image
+    except:
+        return []
 
 def image_conversion(inpath, image_path):
     print("Converting to image")
@@ -42,60 +51,57 @@ def image_conversion(inpath, image_path):
 
         image_counter = image_counter + 1
 
-# inpath coba data tanah
 
-inpath = "inpath/data1.PDF" # ini harus nerima jadi inputan user
-image_path = "image_path/" # image path tetep yang ini nnti masuk ke function
-# image path bisa jadi disimpen di main.py
+def searchable_preprocess(filename_pdf):
+    #inpath = "inpath/data1.PDF" # ini harus nerima jadi inputan user
+
+    inpath = filename_pdf
+    image_path = "image_path/" # image path tetep yang ini nnti masuk ke function
+    # image path bisa jadi disimpen di main.py
 
 
-image_conversion(inpath, image_path)
+    image_conversion(inpath, image_path)
 
-""" Convert to PDF """
+    """ Convert to PDF """
 
-import cv2
-import pytesseract
+    ## directory cmd tergantung installing tesseract nya dimana
 
-## directory cmd tergantung installing tesseract nya dimana
+    ## directory bisa jadi disimpen di main.py juga
+    pytesseract.pytesseract.tesseract_cmd = 'C://Program Files//Tesseract-OCR//tesseract.exe'
+    TESSDATA_PREFIX = 'C://Program Files//Tesseract-OCR'
+    tessdata_dir_config = '--tessdata-dir "C://Program Files//Tesseract-OCR//tessdata"'
 
-## directory bisa jadi disimpen di main.py juga
-pytesseract.pytesseract.tesseract_cmd = 'C://Program Files//Tesseract-OCR//tesseract.exe'
-TESSDATA_PREFIX = 'C://Program Files//Tesseract-OCR'
-tessdata_dir_config = '--tessdata-dir "C://Program Files//Tesseract-OCR//tessdata"'
+    input_dir = image_path + "img_homeland_%d.jpg"
+    try_img = list(glob.glob(image_path + "*.jpg"))
 
-input_dir = image_path + "img_homeland_%d.jpg"
-try_img = list(glob.glob(image_path + "*.jpg"))
+    results = []
+    
+    for img_name in try_img:
+        img = open_image(img_name)
+        # try_img.append(img)   
 
-def open_image(path):
-    try:
-        image = cv2.imread(path)
-        return image
-    except:
-        return []
+        res = pytesseract.image_to_pdf_or_hocr(img, lang="eng",
+                                                config=tessdata_dir_config)
+        result = bytearray(res)
+        results.append(result)
 
-# print(len(try_img))
+    return results
+    # print(len(results))
 
-results = []
-  
-for img_name in try_img:
-    img = open_image(img_name)
-    # try_img.append(img)   
+def result_search(img_retrieved):
+    
+    pdf_counter = 0
 
-    res = pytesseract.image_to_pdf_or_hocr(img, lang="eng",
-                                            config=tessdata_dir_config)
-    result = bytearray(res)
-    results.append(result)
+    for save_pdf in range(0, len(img_retrieved)):
+        pdf_filename = open("output_path/homeland_searchablePDF_" + str(pdf_counter) + ".pdf", "w+b")
+        pdf_filename.write(img_retrieved[save_pdf])
+        pdf_filename.close()
 
-# print(len(results))
+        pdf_counter = pdf_counter + 1
 
-pdf_counter = 0
+    return pdf_filename
 
-for save_pdf in range(0, len(results)):
-    pdf_filename = open("output_path/homeland_searchablePDF_" + str(pdf_counter) + ".pdf", "w+b")
-    pdf_filename.write(results[save_pdf])
-    pdf_filename.close()
+# processing_pdf = result_search(results)
 
-    pdf_counter = pdf_counter + 1
-
-path_to_pdf = "output_path/"
-merging_pdf_to_file(path_to_pdf)
+# path_to_pdf = "output_path/"
+# merging_pdf_to_file(path_to_pdf)

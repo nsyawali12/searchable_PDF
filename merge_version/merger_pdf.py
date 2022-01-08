@@ -16,8 +16,8 @@ def merging_pdf_to_file(path):
         if items_pdf.endswith('.pdf'):
             merger.append(items_pdf)
 
-    merger.write("results_of_searchable.pdf")
-    merger.close()
+    # merger.write("results_of_searchable.pdf")
+    # merger.close()
 
     return merger
 
