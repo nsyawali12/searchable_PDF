@@ -1,4 +1,5 @@
 import os
+import requests
 import json
 from re import search
 from PyPDF2 import merger
@@ -18,6 +19,7 @@ UPLOAD_FOLDER = './upload'
 ALLOWED_EXTENSIONS = set(['pdf','PDF', 'jpg', 'png'])
 
 path_to_img_pdf = "output_path/"
+path_result = "./merge_result/"
 
 app = Flask(__name__, template_folder='web_merge')
 # app = Flask(__name__, template_folder='../merge_version/')
@@ -67,6 +69,7 @@ def upload_file():
             file.save(file_path)
 
             do_pdf_to_searchable = pdf_to_searchable(file_path)
+            print(do_pdf_to_searchable)
 
             print("request ke 3 aman")
 
@@ -77,13 +80,16 @@ def upload_file():
             num_dir = os.listdir(path_to_img_pdf)
             num_files = len(num_dir)
 
-            pdf_file = path_to_img_pdf + "homeland_searchablePDF_%d.pdf"
+            # pdf_file = path_to_img_pdf + "homeland_searchablePDF_%d.pdf"
+            # print(pdf_file)
 
             merger = PdfFileMerger()
 
             for item in range(0, len(num_dir)):
+                pdf_file = path_to_img_pdf + "homeland_searchablePDF_%d.pdf"
                 items_pdf = pdf_file %item
                 if items_pdf.endswith('.pdf'):
+                    # merger.append(fileobj=open(items_pdf))
                     merger.append(items_pdf)
             
             # result_merger = 'search_result.pdf'
@@ -92,12 +98,18 @@ def upload_file():
             # response.headers["Content-Disposition"] = "attachment;filename=search_result.pdf"
             # response.headers.set('Content-Type', 'application/pdf')
             
-            respon_pdf = merger.write('searchable_result.pdf')
-            response = Response(respon_pdf, content_type='application/pdf')
-            response.headers["Content-Disposition"] = "attachment;filename=searchable_pdf.pdf"
-
-            # merger.write(response)
+            # filePath = os.path.join(path_result, os.path.basename('searchable_result.pdf'))
+            # with open('./merge_result/searchable_result.pdf', 'wb') as f:
+            # f.write(datatowrite.encode(encoding='UTF-8'))
+                
+            merger.write('merge_result/searchable_result.pdf')
             merger.close()
+            respon_result = open('merge_result/searchable_result.pdf', 'rb')
+            
+            response = Response(respon_result, content_type='application/pdf')
+            response.headers["Content-Disposition"] = "attachment;filename=searchable_pdf.pdf"
+            
+            # merger.write(response)
 
             print("Request PDF Searchable aman")
 
